@@ -1,0 +1,9 @@
+.card {
+    background-color: lightgrey;
+    border: 1px solid grey;
+    border-radius: 8px;
+    display: inline-flex;
+    flex-direction: column;
+    padding: 8px;
+    position: absolute;
+}
