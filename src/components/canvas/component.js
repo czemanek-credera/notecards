@@ -5,53 +5,72 @@ import Card from '../card/component';
 
 class Canvas extends React.Component {
 
+    //  props: {
+    //      active
+    //      cards
+    //  }
+
     constructor(props) {
         super(props);
 
         this.state = {
-            activeCard: null
+            drag: null
         }
     }
 
-    activateCard() {
-
-    }
-
-    
-    grabCard(card) {    
-        this.setState(() => {
-            return {
-                activeCard: card
-            };
-        });
-    }
-    
-    moveCard(event) {
-        if(this.state.activeCard) {
-            event.persist();
-            console.log(event);
-            this.state.activeCard.setState(() => {
+    onMouseNone(event) {
+        if(event.target.id === 'canvas') {
+            this.props.onSelect(null);
+            this.setState(() => {
                 return {
-                    x: event.clientX,
-                    y: event.clientY
+                    drag: null
                 };
-            })
+            });
         }
     }
-    
-    releaseCard() {
+
+    onMouseDown(card, note) {
+        this.props.onSelect(note);
         this.setState(() => {
             return {
-                activeCard: null
-            };
+                drag: card
+            }
         });
+    }
+
+    onMouseMove(event) {
+        if(this.state.drag) {
+            this.state.drag.move(event.clientX, event.clientY);
+        }
+    }
+
+    onMouseUp() {
+        this.setState(() => {
+            return {
+                drag: null
+            }
+        })
     }
 
     render() {
+        const cards = this.props.notes.map((note) => {
+            return <Card
+                key={note.title}
+                title={note.title}
+                description={note.description}
+                active={note === this.props.active}
+                onMouseDown={(card) => { this.onMouseDown(card, note); } }
+            />
+        });
+
         return (
-          <div className={styles.canvas} onMouseMove={(event) => this.moveCard(event)} onMouseUp={() => this.releaseCard()}>
-              <Card title="Card #1" description="First card description." onMouseDown={(card) => this.grabCard(card)}/>
-          </div>
+            <div id="canvas" className={styles.canvas}
+                onMouseDown={(event) => this.onMouseNone(event)}
+                onMouseMove={(event) => this.onMouseMove(event)}
+                onMouseUp={() => this.onMouseUp()}
+            >
+                {cards}
+            </div>
         );
     }
 

@@ -1,0 +1,15 @@
+.button {
+	background-color: lightgrey;
+	border: 1px solid grey;
+	border-radius: 8px;
+	padding: 8px;
+	margin: 8px;
+}
+
+.button:hover {
+	background-color: darkgrey;
+}
+
+.button:active {
+	background-color: white;
+}
